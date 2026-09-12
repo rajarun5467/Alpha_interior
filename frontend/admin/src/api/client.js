@@ -1,6 +1,9 @@
 ﻿import axios from 'axios';
 
-const API = axios.create({ baseURL: '/api' });
+const API_URL = import.meta.env.PROD
+  ? 'https://alpha-interior.onrender.com/api'
+  : '/api';
+const API = axios.create({ baseURL: API_URL });
 
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem('adminToken');
