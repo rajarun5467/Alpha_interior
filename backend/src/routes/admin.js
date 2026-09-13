@@ -10,6 +10,15 @@ import {
 const router = express.Router();
 router.use(protect);
 
+// === SINGLETON GET routes ===
+const singleGet = (Model, filter = {}) => async (req, res) => {
+  try { res.json(await Model.findOne(filter) || {}); } catch (e) { res.status(500).json({ message: e.message }); }
+};
+router.get('/settings', singleGet(Settings));
+router.get('/hero', singleGet(Hero));
+router.get('/about-content', singleGet(AboutContent));
+router.get('/cost-calculator-config', singleGet(CostCalculatorConfig));
+
 // === SINGLETON PUT routes ===
 const singlePut = (Model, filter = {}) => async (req, res) => {
   try {
