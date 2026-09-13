@@ -97,7 +97,10 @@ export default function AboutSection({ setActivePage, onOpenQuoteModal }) {
 
   useEffect(() => {
     API.get('/about-content').then((res) => {
-      if (res.data && res.data.pullQuote) setPullQuote(res.data.pullQuote);
+      if (res.data && res.data.pullQuote) {
+        const q = res.data.pullQuote;
+        setPullQuote(typeof q === 'string' ? q : (q.text || ''));
+      }
     }).catch(() => {});
   }, []);
 
