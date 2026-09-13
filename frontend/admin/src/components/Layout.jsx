@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import {
   LayoutDashboard, Users, Settings as SettingsIcon, Image, Briefcase, FolderKanban,
-  Star, BarChart3, HelpCircle, ListOrdered, Building2, Award, Layers, Info,
-  Calculator, FileText, Megaphone, Footprints, LogOut, Menu, X
+  Star, Layers, Info,
+  Calculator, LogOut, Menu, X
 } from 'lucide-react';
 
 const navItems = [
@@ -15,17 +15,9 @@ const navItems = [
   { path: '/services', label: 'Services', icon: Briefcase },
   { path: '/projects', label: 'Projects', icon: FolderKanban },
   { path: '/testimonials', label: 'Testimonials', icon: Star },
-  { path: '/stats', label: 'Stats', icon: BarChart3 },
-  { path: '/faqs', label: 'FAQs', icon: HelpCircle },
-  { path: '/process-steps', label: 'Process Steps', icon: ListOrdered },
-  { path: '/client-logos', label: 'Client Logos', icon: Building2 },
-  { path: '/advantage-tiles', label: 'Advantage Tiles', icon: Award },
   { path: '/transformation-tabs', label: 'Transformation', icon: Layers },
   { path: '/about-content', label: 'About Content', icon: Info },
-  { path: '/cost-calculator', label: 'Cost Calculator', icon: Calculator },
-  { path: '/page-headers', label: 'Page Headers', icon: FileText },
-  { path: '/cta-banners', label: 'CTA Banners', icon: Megaphone },
-  { path: '/footer-config', label: 'Footer Config', icon: Footprints }
+  { path: '/cost-calculator', label: 'Cost Calculator', icon: Calculator }
 ];
 
 export function Layout({ children }) {
