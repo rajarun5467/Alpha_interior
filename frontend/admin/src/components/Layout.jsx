@@ -30,9 +30,12 @@ export function Layout({ children }) {
     <div className="flex h-screen bg-slate-100">
       {/* Sidebar */}
       <aside className={`fixed lg:static z-40 w-64 h-full bg-navy text-white transition-transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <div className="p-5 border-b border-white/10">
-          <div className="text-xl font-bold">ALPHA <span className="text-gold">OFFICE</span></div>
-          <div className="text-xs text-slate-400 tracking-widest">ADMIN PANEL</div>
+        <div className="p-5 border-b border-white/10 flex items-center gap-3">
+          <img src="/logo.jpg" alt="Alpha Office Interior" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
+          <div>
+            <div className="text-xl font-bold leading-tight">ALPHA <span className="text-gold">OFFICE</span></div>
+            <div className="text-xs text-slate-400 tracking-widest">ADMIN PANEL</div>
+          </div>
         </div>
         <nav className="overflow-y-auto h-[calc(100vh-140px)] py-2">
           {navItems.map((item) => {

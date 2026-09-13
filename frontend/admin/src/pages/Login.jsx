@@ -27,9 +27,10 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-navy">
       <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-        <div className="text-center mb-6">
+        <div className="text-center mb-6 flex flex-col items-center gap-2">
+          <img src="/logo.jpg" alt="Alpha Office Interior" style={{ width: '56px', height: '56px', borderRadius: '10px', objectFit: 'cover' }} />
           <div className="text-2xl font-bold text-navy">ALPHA <span className="text-gold">OFFICE</span></div>
-          <div className="text-sm text-slate-500 tracking-widest mt-1">ADMIN PANEL</div>
+          <div className="text-sm text-slate-500 tracking-widest">ADMIN PANEL</div>
         </div>
         {error && <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-4">
