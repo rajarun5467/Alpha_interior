@@ -57,6 +57,13 @@ export default function Footer({ setActivePage, onOpenQuoteModal }) {
               Alpha Office Interior specializes in corporate office interior design, space planning, modular furniture, false ceilings, glass partitions, and turnkey fit-outs across Noida & Pan-India.
             </p>
             {/* Social Icons */}
+            <h5 style={{ color: '#FFFFFF', fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.08em', marginBottom: '0.25rem', position: 'relative', paddingBottom: '0.4rem' }}>
+              FOLLOW US
+              <span style={{ position: 'absolute', bottom: 0, left: 0, width: '28px', height: '2.5px', backgroundColor: '#D9A441', borderRadius: '2px' }}></span>
+            </h5>
+            <p style={{ fontSize: '0.82rem', color: '#94A3B8', lineHeight: 1.6, marginBottom: '0.85rem' }}>
+              @alphaofficeinterior on Facebook, Instagram, LinkedIn & Pinterest
+            </p>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               {[
                 { icon: <FacebookIcon size={18} />, label: 'Facebook', href: '#' },

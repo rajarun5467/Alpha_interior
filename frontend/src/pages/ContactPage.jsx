@@ -138,7 +138,13 @@ export default function ContactPage() {
 
               {/* Social Links */}
               <div>
-                <h4 style={{ fontSize: '1rem', color: '#0B1B36', fontWeight: 800, marginBottom: '0.85rem' }}>Follow Us @alphaofficeinterior</h4>
+                <h4 style={{ fontSize: '1rem', color: '#0B1B36', fontWeight: 800, marginBottom: '0.25rem', letterSpacing: '0.06em', position: 'relative', paddingBottom: '0.4rem', display: 'inline-block' }}>
+                  FOLLOW US
+                  <span style={{ position: 'absolute', bottom: 0, left: 0, width: '28px', height: '3px', backgroundColor: '#D9A441', borderRadius: '2px' }}></span>
+                </h4>
+                <p style={{ fontSize: '0.875rem', color: '#64748B', lineHeight: 1.6, marginTop: '0.6rem', marginBottom: '0.85rem' }}>
+                  @alphaofficeinterior on Facebook, Instagram, LinkedIn & Pinterest
+                </p>
                 <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                   {[
                     { icon: <FacebookIcon size={18} />, label: 'Facebook' },
