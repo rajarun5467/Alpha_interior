@@ -1,6 +1,5 @@
 ﻿import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
-import connectDB from '../config/db.js';
 import {
   Admin, Settings, Hero, Service, ServiceChecklist, Project, ProjectCategory,
   Testimonial, Stat, Faq, ProcessStep, ClientLogo, AdvantageTile,
@@ -9,8 +8,8 @@ import {
 } from '../models/index.js';
 
 dotenv.config();
-await connectDB();
 
+export async function runSeed() {
 console.log('Seeding database...');
 
 // Clear all
@@ -243,7 +242,7 @@ await PageHeader.insertMany([
 // CTA Banners
 await CtaBanner.insertMany([
   { location: 'home-final', title: 'Ready to Transform Your Workspace?', description: 'Get a free consultation and 3D design preview for your office interior project today.', buttons: [{ label: 'Get Free Quote', action: 'quote', style: 'gold' }, { label: 'Call +91 8178782919', action: 'tel', style: 'outline' }] },
-  { location: 'about-final', title: 'Let's Build Your Dream Office Together', description: 'Schedule a free site visit and get a customized interior proposal.', buttons: [{ label: 'Get Free Quote', action: 'quote', style: 'gold' }, { label: 'View Projects', action: 'projects', style: 'outline' }] },
+  { location: 'about-final', title: "Let's Build Your Dream Office Together", description: 'Schedule a free site visit and get a customized interior proposal.', buttons: [{ label: 'Get Free Quote', action: 'quote', style: 'gold' }, { label: 'View Projects', action: 'projects', style: 'outline' }] },
   { location: 'services', title: 'Start Your Interior Journey Today', description: 'From concept to handover — we manage every detail.', buttons: [{ label: 'Get Free Quote', action: 'quote', style: 'gold' }] },
   { location: 'projects', title: 'Your Project Could Be Next', description: 'Get in touch for a free consultation and 3D design preview.', buttons: [{ label: 'Get Free Quote', action: 'quote', style: 'gold' }] },
   { location: 'footer-top', title: 'Ready to Transform Your Workspace?', description: 'Get in touch today for space planning, 3D interior design, and complete turnkey execution.', buttons: [{ label: 'Get Free Consultation', action: 'quote', style: 'gold' }, { label: 'Call +91 8178782919', action: 'tel', style: 'outline' }] }
@@ -269,4 +268,13 @@ await FooterConfig.create({
 });
 
 console.log('Seed complete!');
-process.exit(0);
+}
+
+// If run directly as a script, connect to DB and run seed
+import connectDB from '../config/db.js';
+const isDirectRun = process.argv[1] && process.argv[1].endsWith('seed.js');
+if (isDirectRun) {
+  await connectDB();
+  await runSeed();
+  process.exit(0);
+}
