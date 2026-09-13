@@ -20,11 +20,6 @@ export function Settings() {
     { type: 'object', key: 'seo', label: 'SEO', subFields: [
       { key: 'title', label: 'Page Title' },
       { key: 'description', label: 'Meta Description', type: 'textarea' }
-    ]},
-    { type: 'object', key: 'brandColors', label: 'Brand Colors', subFields: [
-      { key: 'navy', label: 'Navy Color' },
-      { key: 'gold', label: 'Gold Color' },
-      { key: 'goldDark', label: 'Gold Dark Color' }
     ]}
   ]} />;
 }

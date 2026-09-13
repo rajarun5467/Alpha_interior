@@ -10,14 +10,14 @@ import {
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/leads', label: 'Leads', icon: Users },
-  { path: '/settings', label: 'Site Settings', icon: SettingsIcon },
   { path: '/hero', label: 'Hero', icon: Image },
   { path: '/services', label: 'Services', icon: Briefcase },
   { path: '/projects', label: 'Projects', icon: FolderKanban },
   { path: '/testimonials', label: 'Testimonials', icon: Star },
   { path: '/transformation-tabs', label: 'Transformation', icon: Layers },
   { path: '/about-content', label: 'About Content', icon: Info },
-  { path: '/cost-calculator', label: 'Cost Calculator', icon: Calculator }
+  { path: '/cost-calculator', label: 'Cost Calculator', icon: Calculator },
+  { path: '/settings', label: 'Site Settings', icon: SettingsIcon }
 ];
 
 export function Layout({ children }) {
