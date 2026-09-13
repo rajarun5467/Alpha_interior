@@ -21,8 +21,8 @@ await Promise.all([
 ].map(m => m.deleteMany({})));
 
 // Admin
-const hashed = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'Admin@12345', 10);
-await Admin.create({ email: process.env.ADMIN_EMAIL || 'admin@alphaofficeinterior.com', password: hashed });
+const hashed = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'admin123', 10);
+await Admin.create({ email: process.env.ADMIN_EMAIL || 'admin', password: hashed });
 
 // Settings
 await Settings.create({
