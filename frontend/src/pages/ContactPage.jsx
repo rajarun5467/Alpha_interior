@@ -17,9 +17,18 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [settings, setSettings] = useState({});
+  const [serviceOptions, setServiceOptions] = useState([
+    'Corporate Office Interior', 'Space Planning', 'Modular Office Furniture',
+    'Modular School Furniture', 'False Ceiling & Wall Design', 'Turnkey Interior Solutions'
+  ]);
 
   useEffect(() => {
     API.get('/settings').then((res) => { if (res.data) setSettings(res.data); }).catch(() => {});
+    API.get('/services').then((res) => {
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setServiceOptions(res.data.map(s => s.title).filter(Boolean));
+      }
+    }).catch(() => {});
   }, []);
 
   const handleSubmit = async (e) => {
@@ -264,12 +273,10 @@ export default function ContactPage() {
                       value={formData.service}
                       onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                     >
-                      <option value="Corporate Office Interior">Corporate Office Interior</option>
-                      <option value="Space Planning">Space Planning</option>
-                      <option value="Modular Furniture">Modular Office Furniture</option>
-                      <option value="Modular School Furniture">Modular School Furniture</option>
-                      <option value="False Ceiling & Wall Design">False Ceiling & Wall Design</option>
-                      <option value="Turnkey Interior Solutions">Turnkey Interior Solutions</option>
+                      {serviceOptions.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                      <option value="Other">Other</option>
                     </select>
                   </div>
 

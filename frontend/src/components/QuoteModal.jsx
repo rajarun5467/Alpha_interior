@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, CheckCircle, Send, ShieldCheck } from 'lucide-react';
 import API from '../api/client.js';
 
@@ -14,6 +14,21 @@ export default function QuoteModal({ isOpen, onClose }) {
 
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [serviceOptions, setServiceOptions] = useState([
+    'Corporate Office Interior', 'Space Planning', 'Modular Office Furniture',
+    'Modular School Furniture', 'False Ceiling & Wall Design', 'Turnkey Interior Solutions'
+  ]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    API.get('/services').then((res) => {
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        const titles = res.data.map(s => s.title).filter(Boolean);
+        setServiceOptions(titles);
+        setFormData((prev) => titles.includes(prev.service) ? prev : { ...prev, service: titles[0] });
+      }
+    }).catch(() => {});
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -35,7 +50,7 @@ export default function QuoteModal({ isOpen, onClose }) {
       name: '',
       email: '',
       phone: '',
-      service: 'Corporate Office Interior',
+      service: serviceOptions[0] || 'Corporate Office Interior',
       city: 'Noida',
       message: ''
     });
@@ -143,12 +158,10 @@ export default function QuoteModal({ isOpen, onClose }) {
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                 >
-                  <option value="Corporate Office Interior">Corporate Office Interior</option>
-                  <option value="Space Planning">Space Planning</option>
-                  <option value="Modular Furniture">Modular Office Furniture</option>
-                  <option value="Modular School Furniture">Modular School Furniture</option>
-                  <option value="False Ceiling & Wall Design">False Ceiling & Wall Design</option>
-                  <option value="Turnkey Interior Solutions">Turnkey Interior Solutions</option>
+                  {serviceOptions.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                  <option value="Other">Other</option>
                 </select>
               </div>
 
