@@ -35,7 +35,7 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} required
               className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent outline-none" />
           </div>
           <div>
