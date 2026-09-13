@@ -5,6 +5,8 @@ const API_URL = import.meta.env.PROD
   : '/api';
 const API = axios.create({ baseURL: API_URL });
 
+export const BACKEND_URL = API_URL.replace(/\/api$/, '');
+
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem('adminToken');
   if (token) config.headers.Authorization = `Bearer ${token}`;

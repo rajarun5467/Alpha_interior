@@ -1,5 +1,5 @@
-﻿import { useEffect, useState } from 'react';
-import API from '../api/client.js';
+﻿import { useEffect, useState, useRef } from 'react';
+import API, { BACKEND_URL } from '../api/client.js';
 import { Plus, Trash2, Edit3, X, Save, ArrowUp, ArrowDown } from 'lucide-react';
 
 export function useApi(endpoint, single = false) {
@@ -61,30 +61,46 @@ export function ListEditor({ label, items, onChange }) {
 
 export function ImageInput({ label, value, onChange }) {
   const [uploading, setUploading] = useState(false);
+  const [fileName, setFileName] = useState('');
+  const fileRef = useRef(null);
+
   const handleUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    setFileName(file.name);
     setUploading(true);
     const formData = new FormData();
     formData.append('image', file);
     try {
       const res = await API.post('/admin/upload', formData);
       onChange(res.data.url);
-    } catch (err) { alert('Upload failed'); }
+    } catch (err) { alert('Upload failed: ' + (err.response?.data?.message || err.message)); }
     setUploading(false);
   };
+
   return (
     <div>
       <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
-      <div className="flex gap-2 items-start">
-        <input type="text" value={value || ''} onChange={(e) => onChange(e.target.value)} placeholder="Image URL"
+      <div className="flex gap-2 items-center">
+        <input type="text" value={value || ''} onChange={(e) => onChange(e.target.value)} placeholder="Paste image URL or browse below"
           className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-gold" />
-        <label className="cursor-pointer bg-slate-100 px-3 py-2 rounded-lg text-sm hover:bg-slate-200">
-          {uploading ? 'Uploading...' : 'Upload'}
-          <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
-        </label>
       </div>
-      {value && <img src={value} alt="Preview" className="mt-2 w-24 h-24 object-cover rounded-lg border" />}
+      <div className="mt-2 flex items-center gap-3">
+        <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
+          className="flex items-center gap-2 bg-gold text-navy px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gold-dark transition-colors disabled:opacity-50">
+          {uploading ? 'Uploading...' : 'Browse & Upload'}
+        </button>
+        <input ref={fileRef} type="file" accept="image/*" onChange={handleUpload} className="hidden" />
+        {fileName && <span className="text-xs text-slate-500 truncate max-w-[200px]">{fileName}</span>}
+      </div>
+      {value && (
+        <div className="mt-3 relative inline-block">
+          <img src={value.startsWith('/') ? `${BACKEND_URL}${value}` : value}
+            alt="Preview" className="w-32 h-32 object-cover rounded-lg border-2 border-slate-200" />
+          <button type="button" onClick={() => { onChange(''); setFileName(''); }}
+            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600">×</button>
+        </div>
+      )}
     </div>
   );
 }
