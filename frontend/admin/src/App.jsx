@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import Leads from './pages/Leads.jsx';
 import {
   Settings, ServicesManager, ProjectsManager, TestimonialsManager,
-  TransformationTabsManager, AboutContentManager,
+  TransformationTabsManager,
   CostCalculatorConfigManager
 } from './pages/AllPages.jsx';
 
@@ -32,7 +32,6 @@ function AppRoutes() {
               <Route path="/projects" element={<ProjectsManager />} />
               <Route path="/testimonials" element={<TestimonialsManager />} />
               <Route path="/transformation-tabs" element={<TransformationTabsManager />} />
-              <Route path="/about-content" element={<AboutContentManager />} />
               <Route path="/cost-calculator" element={<CostCalculatorConfigManager />} />
               <Route path="/settings" element={<Settings />} />
             </Routes>

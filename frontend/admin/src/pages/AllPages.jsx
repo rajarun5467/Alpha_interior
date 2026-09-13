@@ -80,12 +80,6 @@ export function TransformationTabsManager() {
   ]} newItemTemplate={{ id: '', label: '', title: '', image: '', description: '', bullets: [] }} />;
 }
 
-export function AboutContentManager() {
-  return <SinglePage title="About Content Manager" endpoint="about-content" fields={[
-    { key: 'pullQuote', label: 'Pull Quote (text)', type: 'textarea' }
-  ]} />;
-}
-
 export function CostCalculatorConfigManager() {
   return <SinglePage title="Cost Calculator Config" endpoint="cost-calculator-config" fields={[]} />;
 }

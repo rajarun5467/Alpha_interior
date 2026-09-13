@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import {
   LayoutDashboard, Users, Settings as SettingsIcon, Briefcase, FolderKanban,
-  Star, Layers, Info,
+  Star, Layers,
   Calculator, LogOut, Menu, X
 } from 'lucide-react';
 
@@ -14,7 +14,6 @@ const navItems = [
   { path: '/projects', label: 'Projects', icon: FolderKanban },
   { path: '/testimonials', label: 'Testimonials', icon: Star },
   { path: '/transformation-tabs', label: 'Transformation', icon: Layers },
-  { path: '/about-content', label: 'About Content', icon: Info },
   { path: '/cost-calculator', label: 'Cost Calculator', icon: Calculator },
   { path: '/settings', label: 'Site Settings', icon: SettingsIcon }
 ];
