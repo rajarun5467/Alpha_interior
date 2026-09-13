@@ -5,7 +5,7 @@ import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Leads from './pages/Leads.jsx';
 import {
-  Settings, HeroManager, ServicesManager, ProjectsManager, TestimonialsManager,
+  Settings, ServicesManager, ProjectsManager, TestimonialsManager,
   TransformationTabsManager, AboutContentManager,
   CostCalculatorConfigManager
 } from './pages/AllPages.jsx';
@@ -28,14 +28,13 @@ function AppRoutes() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/leads" element={<Leads />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/hero" element={<HeroManager />} />
               <Route path="/services" element={<ServicesManager />} />
               <Route path="/projects" element={<ProjectsManager />} />
               <Route path="/testimonials" element={<TestimonialsManager />} />
               <Route path="/transformation-tabs" element={<TransformationTabsManager />} />
               <Route path="/about-content" element={<AboutContentManager />} />
               <Route path="/cost-calculator" element={<CostCalculatorConfigManager />} />
+              <Route path="/settings" element={<Settings />} />
             </Routes>
           </Layout>
         </ProtectedRoute>

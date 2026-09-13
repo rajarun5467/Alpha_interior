@@ -2,7 +2,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import {
-  LayoutDashboard, Users, Settings as SettingsIcon, Image, Briefcase, FolderKanban,
+  LayoutDashboard, Users, Settings as SettingsIcon, Briefcase, FolderKanban,
   Star, Layers, Info,
   Calculator, LogOut, Menu, X
 } from 'lucide-react';
@@ -10,7 +10,6 @@ import {
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/leads', label: 'Leads', icon: Users },
-  { path: '/hero', label: 'Hero', icon: Image },
   { path: '/services', label: 'Services', icon: Briefcase },
   { path: '/projects', label: 'Projects', icon: FolderKanban },
   { path: '/testimonials', label: 'Testimonials', icon: Star },
