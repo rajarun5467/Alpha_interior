@@ -1,53 +1,69 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Building, Wrench, Layers, Users, Zap, Award, ShieldCheck, Clock, ArrowRight, CheckCircle2 } from 'lucide-react';
 import ServiceCard from '../components/ServiceCard';
 import SkylineVector from '../components/SkylineVector';
+import API from '../api/client.js';
+
+const iconMap = { Building, Wrench, Layers, Users, Zap, Award, ShieldCheck, Clock, CheckCircle2 };
+
+const fallbackServices = [
+  {
+    title: 'Corporate Office Interior',
+    description: 'Full-service office design from concept to completion. We handle layout zoning, executive cabins, open workstations, and cafeteria fit-outs tailored to corporate brand guidelines.',
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+    icon: 'Building',
+    highlights: ['3D Visualizations & Walkthroughs', 'Branded Color Themes', 'Executive & Workstation Fit-outs']
+  },
+  {
+    title: 'Space Planning',
+    description: 'Strategic layouts maximizing efficiency, employee circulation flow, acoustic isolation, and natural day-light distribution across all square footage.',
+    image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80',
+    icon: 'Layers',
+    highlights: ['Ergonomic Traffic Circulation', 'Departmental Layout Zoning', 'Scalable Floor Layouts']
+  },
+  {
+    title: 'Modular Furniture',
+    description: 'Custom furniture solutions tailored to your space: linear workstations, cluster desks, height-adjustable standing desks, executive tables, and acoustic pods.',
+    image: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80',
+    icon: 'Award',
+    highlights: ['Custom Modular Workstations', 'Ergonomic Task Chairs', 'Integrated Wire Trays & Power Sockets']
+  },
+  {
+    title: 'Modular School Furniture',
+    description: 'Custom school furniture solutions tailored to educational spaces: dual student desks, teacher lecterns, laboratory workbenches, and library shelving.',
+    image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
+    icon: 'Users',
+    highlights: ['Child-Safe Rounded Corner Frames', 'Durable Scratch-Proof Tops', 'Library Racks & Activity Tables']
+  },
+  {
+    title: 'False Ceiling & Wall Design',
+    description: 'Aesthetic ceiling and wall treatments for a polished look. Gypsum false ceiling grid designs, acoustic wall panels, wooden louvers, and ambient cove LED lighting.',
+    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
+    icon: 'Zap',
+    highlights: ['Gypsum Board Ceiling Systems', 'Acoustic Wall Panelling', 'Energy-Efficient LED Lighting']
+  },
+  {
+    title: 'Turnkey Interior Solutions',
+    description: 'End-to-end project management where we handle everything: civil masonry, electrical wiring, plumbing, HVAC ducting, fire safety, paint finish, and final handover.',
+    image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80',
+    icon: 'Wrench',
+    highlights: ['Single Point Responsibility', 'Fixed Cost & Timeline', 'Post-Handover Warranty & Support']
+  }
+];
 
 export default function ServicesPage({ onOpenQuoteModal }) {
-  const mainServices = [
-    {
-      title: 'Corporate Office Interior',
-      description: 'Full-service office design from concept to completion. We handle layout zoning, executive cabins, open workstations, and cafeteria fit-outs tailored to corporate brand guidelines.',
-      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
-      icon: <Building size={22} />,
-      highlights: ['3D Visualizations & Walkthroughs', 'Branded Color Themes', 'Executive & Workstation Fit-outs']
-    },
-    {
-      title: 'Space Planning',
-      description: 'Strategic layouts maximizing efficiency, employee circulation flow, acoustic isolation, and natural day-light distribution across all square footage.',
-      image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80',
-      icon: <Layers size={22} />,
-      highlights: ['Ergonomic Traffic Circulation', 'Departmental Layout Zoning', 'Scalable Floor Layouts']
-    },
-    {
-      title: 'Modular Furniture',
-      description: 'Custom furniture solutions tailored to your space: linear workstations, cluster desks, height-adjustable standing desks, executive tables, and acoustic pods.',
-      image: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80',
-      icon: <Award size={22} />,
-      highlights: ['Custom Modular Workstations', 'Ergonomic Task Chairs', 'Integrated Wire Trays & Power Sockets']
-    },
-    {
-      title: 'Modular School Furniture',
-      description: 'Custom school furniture solutions tailored to educational spaces: dual student desks, teacher lecterns, laboratory workbenches, and library shelving.',
-      image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
-      icon: <Users size={22} />,
-      highlights: ['Child-Safe Rounded Corner Frames', 'Durable Scratch-Proof Tops', 'Library Racks & Activity Tables']
-    },
-    {
-      title: 'False Ceiling & Wall Design',
-      description: 'Aesthetic ceiling and wall treatments for a polished look. Gypsum false ceiling grid designs, acoustic wall panels, wooden louvers, and ambient cove LED lighting.',
-      image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
-      icon: <Zap size={22} />,
-      highlights: ['Gypsum Board Ceiling Systems', 'Acoustic Wall Panelling', 'Energy-Efficient LED Lighting']
-    },
-    {
-      title: 'Turnkey Interior Solutions',
-      description: 'End-to-end project management where we handle everything: civil masonry, electrical wiring, plumbing, HVAC ducting, fire safety, paint finish, and final handover.',
-      image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80',
-      icon: <Wrench size={22} />,
-      highlights: ['Single Point Responsibility', 'Fixed Cost & Timeline', 'Post-Handover Warranty & Support']
-    }
-  ];
+  const [mainServices, setMainServices] = useState(fallbackServices);
+
+  useEffect(() => {
+    API.get('/services').then((res) => {
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setMainServices(res.data.map((s) => ({
+          ...s,
+          icon: iconMap[s.icon] ? (() => { const Ic = iconMap[s.icon]; return <Ic size={22} />; })() : <Building size={22} />
+        })));
+      }
+    }).catch(() => {});
+  }, []);
 
   const serviceCategories = [
     {
