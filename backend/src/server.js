@@ -18,7 +18,13 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-const allowedOrigins = (process.env.CORS_ORIGIN || '*').split(',').map(s => s.trim());
+const defaultOrigins = [
+  'https://alpha-interior.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:5174'
+];
+const envOrigins = (process.env.CORS_ORIGIN || '').split(',').map(s => s.trim()).filter(Boolean);
+const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
