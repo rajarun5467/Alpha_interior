@@ -54,7 +54,7 @@ export default function Footer({ setActivePage, onOpenQuoteModal }) {
           {/* Column 1: Brand Info */}
           <div className="footer-col footer-brand" data-reveal>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-              <img src="/favicon.svg" alt="Alpha Office Interior" style={{ width: '40px', height: '40px' }} />
+              <img src="/logo.jpg" alt="Alpha Office Interior" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
               <div>
                 <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF' }}>
                   ALPHA <span style={{ color: '#D9A441' }}>OFFICE</span>

@@ -71,7 +71,7 @@ export default function Navbar({ activePage, setActivePage, onOpenQuoteModal }) 
             onClick={() => handleNavClick('home')}
             style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}
           >
-            <img src="/favicon.svg" alt="Alpha Office Interior Logo" style={{ width: '42px', height: '42px' }} />
+            <img src="/logo.jpg" alt="Alpha Office Interior Logo" style={{ width: '42px', height: '42px', borderRadius: '8px', objectFit: 'cover' }} />
             <div>
               <div style={{
                 fontFamily: 'var(--font-heading)',
