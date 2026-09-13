@@ -1,36 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import API from '../api/client.js';
+
+const fallbackTestimonials = [
+  { name: 'Vikas Malhotra', role: 'Operations Head', company: 'Pinaakee Digital Solutions', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', quote: 'Alpha Office Interior transformed our 8,000 sq. ft. office space in Sector-62 Noida within the promised 45 days timeline. Their glass partitions, modular workstations, and false ceiling design created a modern high-tech vibe that our employees love!', stars: 5 },
+  { name: 'Ananya Sharma', role: 'Facility Manager', company: 'Enterprise Corporate Client', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', quote: 'The turnkey fit-out execution was flawless. From civil & electrical work to executive director cabins and acoustically panelled conference rooms, Alpha Office delivered premium quality with zero stress for our team.', stars: 5 },
+  { name: 'Rajesh Verma', role: 'Director of Infrastructure', company: 'Apex Knowledge Academy', avatar: 'https://randomuser.me/api/portraits/men/52.jpg', quote: 'We commissioned Alpha Office Interior for modular school furniture and seminar hall seating. The durability, ergonomic design, and color themes exceeded all expectations. Exceptional craftsmanship!', stars: 5 }
+];
 
 export default function TestimonialSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [testimonials, setTestimonials] = useState(fallbackTestimonials);
 
-  const testimonials = [
-    {
-      name: 'Vikas Malhotra',
-      role: 'Operations Head',
-      company: 'Pinaakee Digital Solutions',
-      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-      quote: 'Alpha Office Interior transformed our 8,000 sq. ft. office space in Sector-62 Noida within the promised 45 days timeline. Their glass partitions, modular workstations, and false ceiling design created a modern high-tech vibe that our employees love!',
-      stars: 5
-    },
-    {
-      name: 'Ananya Sharma',
-      role: 'Facility Manager',
-      company: 'Enterprise Corporate Client',
-      avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-      quote: 'The turnkey fit-out execution was flawless. From civil & electrical work to executive director cabins and acoustically panelled conference rooms, Alpha Office delivered premium quality with zero stress for our team.',
-      stars: 5
-    },
-    {
-      name: 'Rajesh Verma',
-      role: 'Director of Infrastructure',
-      company: 'Apex Knowledge Academy',
-      avatar: 'https://randomuser.me/api/portraits/men/52.jpg',
-      quote: 'We commissioned Alpha Office Interior for modular school furniture and seminar hall seating. The durability, ergonomic design, and color themes exceeded all expectations. Exceptional craftsmanship!',
-      stars: 5
-    }
-  ];
+  useEffect(() => {
+    API.get('/testimonials').then((res) => {
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setTestimonials(res.data);
+      }
+    }).catch(() => {});
+  }, []);
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);

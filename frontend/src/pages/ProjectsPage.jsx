@@ -1,89 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layers, ShieldCheck, Award, Clock, HeartHandshake, CheckCircle2, ArrowRight } from 'lucide-react';
 import ProjectCard from '../components/ProjectCard';
 import SkylineVector from '../components/SkylineVector';
+import API from '../api/client.js';
+
+const fallbackCategories = ['All', 'Modern Workspaces', 'Glass Partition Solutions', 'Director Cabin', 'Reception Area', 'Conference Room', 'School Furniture', 'Seminar Hall', 'Office Cafeteria'];
+
+const fallbackProjects = [
+  { id: 1, title: 'Modern Workspaces', category: 'Modern Workspaces', image: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80', description: 'Ergonomic and efficient workspaces designed to enhance productivity, collaboration, and employee well-being in open-plan IT offices.', features: ['Ergonomic Task Seating', 'Under-Desk Power Raceway', 'Sound Absorbing Fabric Panels'] },
+  { id: 2, title: 'Glass Partition Solutions', category: 'Glass Partition Solutions', image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80', description: 'Stylish and functional glass partitions creating open, modern, professional environments while maintaining privacy and sound damping.', features: ['Acoustic Laminated Toughened Glass', 'Sleek Aluminium Frame', 'Custom Frosted Stripe Branding'] },
+  { id: 3, title: 'Director Cabin Suite', category: 'Director Cabin', image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80', description: 'Premium designs reflecting leadership, sophistication, comfort and functionality for top executive suites and management cabins.', features: ['Executive Wooden Veneer Table', 'Private Sofa Lounge', 'Warm Ambient Cove Lights'] },
+  { id: 4, title: 'Corporate Reception Area', category: 'Reception Area', image: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?auto=format&fit=crop&w=800&q=80', description: 'Beautifully designed reception areas creating a lasting first impression for visiting corporate clients, partners, and employees.', features: ['Corian Backlit Desk', 'Marble Wall Cladding', 'Plush Visitor Waiting Chairs'] },
+  { id: 5, title: 'Conference & Board Room', category: 'Conference Room', image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80', description: 'Well-planned rooms equipped for effective meetings, hybrid video conferencing, and high-level corporate collaboration.', features: ['Integrated Video Conf System', 'Pop-up Wire Ports', 'Slotted Acoustic Ceiling'] },
+  { id: 6, title: 'Modular School Furniture', category: 'School Furniture', image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80', description: 'Durable and comfortable furniture supporting learning, student posture, and well-being across primary and senior classrooms.', features: ['Heavy Gauge MS Steel Frame', 'Postformed Scratchless Edge', 'Book Storage Shelves'] },
+  { id: 7, title: 'Institutional Seminar Hall', category: 'Seminar Hall', image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80', description: 'Spacious, well-equipped halls for training workshops, corporate orientation events, and academic seminars.', features: ['Tiered Auditorium Seating', 'Stage Podium & Sound Rig', 'Acoustic Soundproofing'] },
+  { id: 8, title: 'Vibrant Office Cafeteria', category: 'Office Cafeteria', image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80', description: 'Vibrant, comfortable cafeterias for employees to unwind, recharge, and enjoy casual team interactions.', features: ['Hygienic Easy-Clean Surfaces', 'Industrial Open Ceiling', 'Relaxing Lounge Booths'] }
+];
 
 export default function ProjectsPage({ onSelectProject, onOpenQuoteModal }) {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [categories, setCategories] = useState(fallbackCategories);
+  const [allProjects, setAllProjects] = useState(fallbackProjects);
 
-  const categories = [
-    'All',
-    'Modern Workspaces',
-    'Glass Partition Solutions',
-    'Director Cabin',
-    'Reception Area',
-    'Conference Room',
-    'School Furniture',
-    'Seminar Hall',
-    'Office Cafeteria'
-  ];
-
-  const allProjects = [
-    {
-      id: 1,
-      title: 'Modern Workspaces',
-      category: 'Modern Workspaces',
-      image: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80',
-      description: 'Ergonomic and efficient workspaces designed to enhance productivity, collaboration, and employee well-being in open-plan IT offices.',
-      features: ['Ergonomic Task Seating', 'Under-Desk Power Raceway', 'Sound Absorbing Fabric Panels']
-    },
-    {
-      id: 2,
-      title: 'Glass Partition Solutions',
-      category: 'Glass Partition Solutions',
-      image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80',
-      description: 'Stylish and functional glass partitions creating open, modern, professional environments while maintaining privacy and sound damping.',
-      features: ['Acoustic Laminated Toughened Glass', 'Sleek Aluminium Frame', 'Custom Frosted Stripe Branding']
-    },
-    {
-      id: 3,
-      title: 'Director Cabin Suite',
-      category: 'Director Cabin',
-      image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
-      description: 'Premium designs reflecting leadership, sophistication, comfort and functionality for top executive suites and management cabins.',
-      features: ['Executive Wooden Veneer Table', 'Private Sofa Lounge', 'Warm Ambient Cove Lights']
-    },
-    {
-      id: 4,
-      title: 'Corporate Reception Area',
-      category: 'Reception Area',
-      image: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?auto=format&fit=crop&w=800&q=80',
-      description: 'Beautifully designed reception areas creating a lasting first impression for visiting corporate clients, partners, and employees.',
-      features: ['Corian Backlit Desk', 'Marble Wall Cladding', 'Plush Visitor Waiting Chairs']
-    },
-    {
-      id: 5,
-      title: 'Conference & Board Room',
-      category: 'Conference Room',
-      image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80',
-      description: 'Well-planned rooms equipped for effective meetings, hybrid video conferencing, and high-level corporate collaboration.',
-      features: ['Integrated Video Conf System', 'Pop-up Wire Ports', 'Slotted Acoustic Ceiling']
-    },
-    {
-      id: 6,
-      title: 'Modular School Furniture',
-      category: 'School Furniture',
-      image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
-      description: 'Durable and comfortable furniture supporting learning, student posture, and well-being across primary and senior classrooms.',
-      features: ['Heavy Gauge MS Steel Frame', 'Postformed Scratchless Edge', 'Book Storage Shelves']
-    },
-    {
-      id: 7,
-      title: 'Institutional Seminar Hall',
-      category: 'Seminar Hall',
-      image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
-      description: 'Spacious, well-equipped halls for training workshops, corporate orientation events, and academic seminars.',
-      features: ['Tiered Auditorium Seating', 'Stage Podium & Sound Rig', 'Acoustic Soundproofing']
-    },
-    {
-      id: 8,
-      title: 'Vibrant Office Cafeteria',
-      category: 'Office Cafeteria',
-      image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80',
-      description: 'Vibrant, comfortable cafeterias for employees to unwind, recharge, and enjoy casual team interactions.',
-      features: ['Hygienic Easy-Clean Surfaces', 'Industrial Open Ceiling', 'Relaxing Lounge Booths']
-    }
-  ];
+  useEffect(() => {
+    API.get('/projects').then((res) => {
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setAllProjects(res.data.map((p, i) => ({ ...p, id: p._id || i + 1 })));
+        const cats = ['All', ...new Set(res.data.map(p => p.category).filter(Boolean))];
+        if (cats.length > 1) setCategories(cats);
+      }
+    }).catch(() => {});
+    API.get('/project-categories').then((res) => {
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setCategories(res.data.map(c => c.name));
+      }
+    }).catch(() => {});
+  }, []);
 
   const filteredProjects = activeCategory === 'All' 
     ? allProjects 

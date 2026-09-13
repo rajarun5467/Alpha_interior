@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Compass, Award, Clock, HeartHandshake, CheckCircle2,
   Users, ShieldCheck, ArrowRight, Sparkles, Building,
   Phone, Wrench, Target, Star, Zap, Globe, TrendingUp,
   LayoutDashboard, Layers, GitMerge, Settings
 } from 'lucide-react';
+import API from '../api/client.js';
 
 const TABS = [
   { id: 'overview',  label: 'Company Overview',        icon: Building    },
@@ -92,6 +93,13 @@ const teamStrengths = [
 
 export default function AboutSection({ setActivePage, onOpenQuoteModal }) {
   const [activeTab, setActiveTab] = useState('overview');
+  const [pullQuote, setPullQuote] = useState('');
+
+  useEffect(() => {
+    API.get('/about-content').then((res) => {
+      if (res.data && res.data.pullQuote) setPullQuote(res.data.pullQuote);
+    }).catch(() => {});
+  }, []);
 
   return (
     <section style={{
@@ -136,7 +144,7 @@ export default function AboutSection({ setActivePage, onOpenQuoteModal }) {
             </span>
           </h2>
           <p style={{ fontSize: '1rem', color: '#64748B', maxWidth: '520px', margin: '0 auto', lineHeight: 1.7 }}>
-            Designing inspiring workspaces with innovation & excellence — since 2019.
+            {pullQuote || 'Designing inspiring workspaces with innovation & excellence — since 2019.'}
           </p>
         </div>
 

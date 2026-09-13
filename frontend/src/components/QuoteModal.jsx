@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, CheckCircle, Send, ShieldCheck } from 'lucide-react';
+import API from '../api/client.js';
 
 export default function QuoteModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -12,12 +13,20 @@ export default function QuoteModal({ isOpen, onClose }) {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+    try {
+      await API.post('/leads/quote', formData);
+    } catch (err) {
+      console.error('Quote submission failed:', err);
+    }
     setSubmitted(true);
+    setSubmitting(false);
   };
 
   const handleReset = () => {
@@ -157,8 +166,8 @@ export default function QuoteModal({ isOpen, onClose }) {
                 <div style={{ fontSize: '0.8rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                   <ShieldCheck size={16} color="#D9A441" /> 100% Privacy Guaranteed
                 </div>
-                <button type="submit" className="btn btn-gold">
-                  Submit Request <Send size={16} />
+                <button type="submit" disabled={submitting} className="btn btn-gold" style={{ opacity: submitting ? 0.6 : 1 }}>
+                  {submitting ? 'Submitting...' : 'Submit Request'} {!submitting && <Send size={16} />}
                 </button>
               </div>
             </form>

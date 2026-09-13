@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, Mail, MapPin, Send, CheckCircle, Clock } from 'lucide-react';
 import { FacebookIcon, InstagramIcon, LinkedinIcon, PinterestIcon } from '../components/SocialIcons';
 import FaqAccordion from '../components/FaqAccordion';
 import SkylineVector from '../components/SkylineVector';
+import API from '../api/client.js';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -14,10 +15,23 @@ export default function ContactPage() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [settings, setSettings] = useState({});
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    API.get('/settings').then((res) => { if (res.data) setSettings(res.data); }).catch(() => {});
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+    try {
+      await API.post('/leads/contact', formData);
+    } catch (err) {
+      console.error('Lead submission failed:', err);
+    }
     setSubmitted(true);
+    setSubmitting(false);
   };
 
   return (
@@ -80,7 +94,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 style={{ fontSize: '1.05rem', color: '#0B1B36', fontWeight: 800, marginBottom: '0.2rem' }}>Call Us Directly</h4>
-                    <a href="tel:+918178782919" style={{ fontSize: '1.15rem', fontWeight: 900, color: '#D97706' }}>+91 8178782919</a>
+                    <a href={`tel:${settings.phone || '+918178782919'}`} style={{ fontSize: '1.15rem', fontWeight: 900, color: '#D97706' }}>{settings.phone || '+91 8178782919'}</a>
                     <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.2rem' }}>Mon - Sat: 9:30 AM - 7:00 PM</div>
                   </div>
                 </div>
@@ -103,8 +117,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 style={{ fontSize: '1.05rem', color: '#0B1B36', fontWeight: 800, marginBottom: '0.2rem' }}>Email Us</h4>
-                    <a href="mailto:info@alphaofficeinterior.com" style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0B1B36' }}>
-                      info@alphaofficeinterior.com
+                    <a href={`mailto:${settings.email || 'info@alphaofficeinterior.com'}`} style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0B1B36' }}>
+                      {settings.email || 'info@alphaofficeinterior.com'}
                     </a>
                     <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.2rem' }}>Guaranteed response within 24 hours</div>
                   </div>
@@ -129,7 +143,7 @@ export default function ContactPage() {
                   <div>
                     <h4 style={{ fontSize: '1.05rem', color: '#0B1B36', fontWeight: 800, marginBottom: '0.2rem' }}>Visit Our Noida Office</h4>
                     <p style={{ fontSize: '0.95rem', color: '#475569', lineHeight: 1.5 }}>
-                      B-115, Sector-2, Noida, Uttar Pradesh – 201301, India
+                      {settings.address || 'B-115, Sector-2, Noida, Uttar Pradesh – 201301, India'}
                     </p>
                   </div>
                 </div>
@@ -270,8 +284,8 @@ export default function ContactPage() {
                     ></textarea>
                   </div>
 
-                  <button type="submit" className="btn btn-gold" style={{ width: '100%', padding: '1rem', fontSize: '1rem', marginTop: '0.5rem' }}>
-                    Send Project Inquiry <Send size={18} />
+                  <button type="submit" disabled={submitting} className="btn btn-gold" style={{ width: '100%', padding: '1rem', fontSize: '1rem', marginTop: '0.5rem', opacity: submitting ? 0.6 : 1 }}>
+                    {submitting ? 'Sending...' : 'Send Project Inquiry'} {!submitting && <Send size={18} />}
                   </button>
                 </form>
               )}

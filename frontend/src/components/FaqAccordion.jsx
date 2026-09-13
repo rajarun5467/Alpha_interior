@@ -1,31 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, HelpCircle } from 'lucide-react';
+import API from '../api/client.js';
+
+const fallbackFaqs = [
+  { q: 'What services are included under Alpha Office Turnkey Interior Solutions?', a: 'Our turnkey interior solutions cover everything from initial 3D space planning and architectural design to civil masonry, gypsum & glass partitions, modular office furniture, false ceiling, flooring, electrical fittings, plumbing, fire safety, and final keys handover.' },
+  { q: 'How long does a typical office interior fit-out project take?', a: 'Project timelines depend on carpet area. Typically, a 3,000 to 5,000 sq. ft. office fit-out is completed within 35 to 45 business days with guaranteed milestone progress updates.' },
+  { q: 'Do you provide customized modular furniture for schools and offices?', a: 'Yes! We manufacture and supply custom modular furniture including ergonomic workstations, executive director desks, school dual seating benches, library racks, and acoustic pods tailored to your floor dimensions.' },
+  { q: 'Where are Alpha Office Interior services available?', a: 'We operate primarily across Noida, Greater Noida, Delhi NCR, Gurgaon, Ghaziabad, and execute pan-India commercial fit-out contracts for major corporate enterprises.' },
+  { q: 'How do I get a free space layout design & project quote?', a: 'You can click on "Get a Free Quote" anywhere on our website, fill in your approximate carpet area and location, or call us directly at +91 8178782919 to schedule a free site evaluation.' }
+];
 
 export default function FaqAccordion() {
   const [openIndex, setOpenIndex] = useState(0);
+  const [faqs, setFaqs] = useState(fallbackFaqs);
 
-  const faqs = [
-    {
-      q: 'What services are included under Alpha Office Turnkey Interior Solutions?',
-      a: 'Our turnkey interior solutions cover everything from initial 3D space planning and architectural design to civil masonry, gypsum & glass partitions, modular office furniture, false ceiling, flooring, electrical fittings, plumbing, fire safety, and final keys handover.'
-    },
-    {
-      q: 'How long does a typical office interior fit-out project take?',
-      a: 'Project timelines depend on carpet area. Typically, a 3,000 to 5,000 sq. ft. office fit-out is completed within 35 to 45 business days with guaranteed milestone progress updates.'
-    },
-    {
-      q: 'Do you provide customized modular furniture for schools and offices?',
-      a: 'Yes! We manufacture and supply custom modular furniture including ergonomic workstations, executive director desks, school dual seating benches, library racks, and acoustic pods tailored to your floor dimensions.'
-    },
-    {
-      q: 'Where are Alpha Office Interior services available?',
-      a: 'We operate primarily across Noida, Greater Noida, Delhi NCR, Gurgaon, Ghaziabad, and execute pan-India commercial fit-out contracts for major corporate enterprises.'
-    },
-    {
-      q: 'How do I get a free space layout design & project quote?',
-      a: 'You can click on "Get a Free Quote" anywhere on our website, fill in your approximate carpet area and location, or call us directly at +91 8178782919 to schedule a free site evaluation.'
-    }
-  ];
+  useEffect(() => {
+    API.get('/faqs').then((res) => {
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setFaqs(res.data.map(f => ({ q: f.question, a: f.answer })));
+      }
+    }).catch(() => {});
+  }, []);
 
   const toggleFaq = (idx) => {
     setOpenIndex(openIndex === idx ? null : idx);

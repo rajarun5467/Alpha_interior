@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ArrowRight, ShieldCheck, Award, Clock, Compass, CheckCircle2, ChevronRight, Lightbulb, Users, HeartHandshake, FileText, Check, Star, Sparkles, Briefcase } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, ShieldCheck, Award, Clock, Compass, CheckCircle2, ChevronRight, Lightbulb, Users, HeartHandshake, FileText, Check, Star, Sparkles, Briefcase, Building, Wrench, Layers, Zap } from 'lucide-react';
 import StatsCounter from '../components/StatsCounter';
 import ServiceCard from '../components/ServiceCard';
 import ProjectCard from '../components/ProjectCard';
@@ -12,119 +12,49 @@ import ProcessSteps from '../components/ProcessSteps';
 import AboutSection from '../components/AboutSection';
 import CountUp from '../components/CountUp';
 import hero1Img from '../assets/hero1.png';
+import API from '../api/client.js';
+
+const iconMap = { Building, Wrench, Layers, Users, Zap, Award, ShieldCheck, Clock, CheckCircle2, Compass, FileText };
+
+const fallbackServices = [
+  { title: 'Corporate Office Interior', description: 'Full-service office design from concept to completion.', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80', icon: 'Compass', highlights: ['3D Concept Visualization', 'Space Optimization', 'Turnkey Fit-Out'] },
+  { title: 'Space Planning', description: 'Strategic layouts maximizing efficiency and flow.', image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80', icon: 'FileText', highlights: ['Workflow Optimization', 'Ergonomic Zoning', 'Flexible Desking'] },
+  { title: 'Modular Furniture', description: 'Custom furniture solutions tailored to your space.', image: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80', icon: 'Award', highlights: ['Modular Desking', 'Executive Cabins', 'Ergonomic Task Chairs'] },
+  { title: 'Modular School Furniture', description: 'Custom school furniture solutions tailored to your space.', image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80', icon: 'Users', highlights: ['Child-Safe Rounded Edges', 'Heavy-Duty Steel Frames', 'Custom School Bench'] },
+  { title: 'False Ceiling & Wall Design', description: 'Aesthetic ceiling and wall treatments for a polished look.', image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80', icon: 'ShieldCheck', highlights: ['Acoustic Soundproofing', 'Energy Efficient LED', 'Gypsum & Wood Panel'] },
+  { title: 'Turnkey Interior Solutions', description: 'End-to-end project management — we handle everything.', image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80', icon: 'Clock', highlights: ['Single Point Contact', 'Fixed Budget & Timeline', 'Post-Handover Warranty'] }
+];
+
+const fallbackProjects = [
+  { id: 1, title: 'Modern Workspaces', category: 'Modern Workspaces', image: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80', description: 'Ergonomic and efficient workspaces designed to enhance productivity, collaboration, and employee well-being.', features: ['Height Adjustable Desks', 'Cable Management', 'Acoustic Wall Panels'] },
+  { id: 2, title: 'Glass Partition Solutions', category: 'Glass Partition Solutions', image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80', description: 'Stylish and functional glass partitions that create open, modern, and professional environments.', features: ['Acoustic Laminated Glass', 'Black Matte Frame', 'Frosted Privacy Film'] },
+  { id: 3, title: 'Director Cabin', category: 'Director Cabin', image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80', description: 'Premium designs that reflect leadership, sophistication, and professionalism with comfort and functionality.', features: ['Italian Veneer Finish', 'Private Meeting Table', 'Ambient Cove Lighting'] },
+  { id: 4, title: 'Reception Area', category: 'Reception Area', image: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?auto=format&fit=crop&w=800&q=80', description: 'Beautifully designed reception areas that create a lasting first impression with elegance and warmth.', features: ['Backlit Acrylic Brand Logo', 'Corian Reception Desk', 'Designer Wall Cladding'] },
+  { id: 5, title: 'Conference Room', category: 'Conference Room', image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80', description: 'Well-planned conference rooms equipped for effective meetings, presentations, and seamless collaboration.', features: ['Pop-up Connectivity Box', 'Fabric Wall Panelling', 'Motorized Blinds'] },
+  { id: 6, title: 'School Furniture', category: 'School Furniture', image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80', description: 'Durable and comfortable school furniture designed to support learning, focus, and student well-being.', features: ['Scratch-Resistant Top', 'Heavy-Duty Tubular Frame', 'Back Support Contour'] },
+  { id: 7, title: 'Seminar Hall', category: 'Seminar Hall', image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80', description: 'Spacious and well-equipped seminar halls for training, workshops, and corporate events.', features: ['Acoustic Slotted Panels', 'Cushioned Tip-up Chairs', 'Stage Lighting Rig'] },
+  { id: 8, title: 'Office Cafeteria', category: 'Office Cafeteria', image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80', description: 'Vibrant and comfortable cafeterias that offer a relaxing space for employees to unwind and recharge.', features: ['Industrial Ceiling Grid', 'Easy-Clean Laminates', 'Pendant Lighting'] }
+];
 
 export default function HomePage({ setActivePage, onOpenQuoteModal, onSelectProject }) {
-  const servicesPreview = [
-    {
-      title: 'Corporate Office Interior',
-      description: 'Full-service office design from concept to completion.',
-      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
-      icon: <Compass size={22} />,
-      highlights: ['3D Concept Visualization', 'Space Optimization', 'Turnkey Fit-Out']
-    },
-    {
-      title: 'Space Planning',
-      description: 'Strategic layouts maximizing efficiency and flow.',
-      image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80',
-      icon: <FileText size={22} />,
-      highlights: ['Workflow Optimization', 'Ergonomic Zoning', 'Flexible Desking']
-    },
-    {
-      title: 'Modular Furniture',
-      description: 'Custom furniture solutions tailored to your space.',
-      image: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80',
-      icon: <Award size={22} />,
-      highlights: ['Modular Desking', 'Executive Cabins', 'Ergonomic Task Chairs']
-    },
-    {
-      title: 'Modular School Furniture',
-      description: 'Custom school furniture solutions tailored to your space.',
-      image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
-      icon: <Users size={22} />,
-      highlights: ['Child-Safe Rounded Edges', 'Heavy-Duty Steel Frames', 'Custom School Bench']
-    },
-    {
-      title: 'False Ceiling & Wall Design',
-      description: 'Aesthetic ceiling and wall treatments for a polished look.',
-      image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
-      icon: <ShieldCheck size={22} />,
-      highlights: ['Acoustic Soundproofing', 'Energy Efficient LED', 'Gypsum & Wood Panel']
-    },
-    {
-      title: 'Turnkey Interior Solutions',
-      description: 'End-to-end project management — we handle everything.',
-      image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80',
-      icon: <Clock size={22} />,
-      highlights: ['Single Point Contact', 'Fixed Budget & Timeline', 'Post-Handover Warranty']
-    }
-  ];
+  const [servicesPreview, setServicesPreview] = useState(fallbackServices.map(s => ({ ...s, icon: iconMap[s.icon] ? (() => { const Ic = iconMap[s.icon]; return <Ic size={22} />; })() : <Compass size={22} /> })));
+  const [featuredProjects, setFeaturedProjects] = useState(fallbackProjects);
 
-  const featuredProjects = [
-    {
-      id: 1,
-      title: 'Modern Workspaces',
-      category: 'Modern Workspaces',
-      image: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80',
-      description: 'Ergonomic and efficient workspaces designed to enhance productivity, collaboration, and employee well-being.',
-      features: ['Height Adjustable Desks', 'Cable Management', 'Acoustic Wall Panels']
-    },
-    {
-      id: 2,
-      title: 'Glass Partition Solutions',
-      category: 'Glass Partition Solutions',
-      image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80',
-      description: 'Stylish and functional glass partitions that create open, modern, and professional environments.',
-      features: ['Acoustic Laminated Glass', 'Black Matte Frame', 'Frosted Privacy Film']
-    },
-    {
-      id: 3,
-      title: 'Director Cabin',
-      category: 'Director Cabin',
-      image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
-      description: 'Premium designs that reflect leadership, sophistication, and professionalism with comfort and functionality.',
-      features: ['Italian Veneer Finish', 'Private Meeting Table', 'Ambient Cove Lighting']
-    },
-    {
-      id: 4,
-      title: 'Reception Area',
-      category: 'Reception Area',
-      image: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?auto=format&fit=crop&w=800&q=80',
-      description: 'Beautifully designed reception areas that create a lasting first impression with elegance and warmth.',
-      features: ['Backlit Acrylic Brand Logo', 'Corian Reception Desk', 'Designer Wall Cladding']
-    },
-    {
-      id: 5,
-      title: 'Conference Room',
-      category: 'Conference Room',
-      image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80',
-      description: 'Well-planned conference rooms equipped for effective meetings, presentations, and seamless collaboration.',
-      features: ['Pop-up Connectivity Box', 'Fabric Wall Panelling', 'Motorized Blinds']
-    },
-    {
-      id: 6,
-      title: 'School Furniture',
-      category: 'School Furniture',
-      image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
-      description: 'Durable and comfortable school furniture designed to support learning, focus, and student well-being.',
-      features: ['Scratch-Resistant Top', 'Heavy-Duty Tubular Frame', 'Back Support Contour']
-    },
-    {
-      id: 7,
-      title: 'Seminar Hall',
-      category: 'Seminar Hall',
-      image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
-      description: 'Spacious and well-equipped seminar halls for training, workshops, and corporate events.',
-      features: ['Acoustic Slotted Panels', 'Cushioned Tip-up Chairs', 'Stage Lighting Rig']
-    },
-    {
-      id: 8,
-      title: 'Office Cafeteria',
-      category: 'Office Cafeteria',
-      image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80',
-      description: 'Vibrant and comfortable cafeterias that offer a relaxing space for employees to unwind and recharge.',
-      features: ['Industrial Ceiling Grid', 'Easy-Clean Laminates', 'Pendant Lighting']
-    }
-  ];
+  useEffect(() => {
+    API.get('/services').then((res) => {
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setServicesPreview(res.data.map(s => ({
+          ...s,
+          icon: iconMap[s.icon] ? (() => { const Ic = iconMap[s.icon]; return <Ic size={22} />; })() : <Compass size={22} />
+        })));
+      }
+    }).catch(() => {});
+    API.get('/projects').then((res) => {
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setFeaturedProjects(res.data.map((p, i) => ({ ...p, id: p._id || i + 1 })));
+      }
+    }).catch(() => {});
+  }, []);
 
   const fullServiceChecklist = [
     { name: 'Office Furniture', desc: 'Ergonomic workstations, executive desks, conference tables & storage units — custom-built for your floor plan and brand theme.' },

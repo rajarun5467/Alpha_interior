@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, Mail, MapPin, ChevronRight } from 'lucide-react';
 import { FacebookIcon, InstagramIcon, LinkedinIcon, PinterestIcon } from './SocialIcons';
+import API from '../api/client.js';
 
 export default function Footer({ setActivePage, onOpenQuoteModal }) {
+  const [settings, setSettings] = useState({});
+  useEffect(() => {
+    API.get('/settings').then((res) => { if (res.data) setSettings(res.data); }).catch(() => {});
+  }, []);
+
   const handleNav = (pageId) => {
     setActivePage(pageId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -15,6 +21,11 @@ export default function Footer({ setActivePage, onOpenQuoteModal }) {
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 150);
   };
+
+  const phone = settings.phone || '+918178782919';
+  const email = settings.email || 'info@alphaofficeinterior.com';
+  const address = settings.address || 'B-115, Sector-2, Noida, Uttar Pradesh – 201301, India';
+  const brandName = settings.brandName || 'Alpha Office Interior';
 
   return (
     <footer style={{ backgroundColor: 'var(--color-navy-dark)', color: '#CBD5E1', borderTop: '4px solid var(--color-gold)' }}>
@@ -29,8 +40,8 @@ export default function Footer({ setActivePage, onOpenQuoteModal }) {
             <button onClick={onOpenQuoteModal} className="btn btn-gold">
               Get Free Consultation
             </button>
-            <a href="tel:+918178782919" className="btn btn-outline-white">
-              <Phone size={16} /> Call +91 8178782919
+            <a href={`tel:${phone}`} className="btn btn-outline-white">
+              <Phone size={16} /> Call {phone}
             </a>
           </div>
         </div>
@@ -159,15 +170,15 @@ export default function Footer({ setActivePage, onOpenQuoteModal }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.9rem' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                 <MapPin size={18} color="#D9A441" style={{ marginTop: '0.2rem', flexShrink: 0 }} />
-                <span>B-115, Sector-2, Noida, Uttar Pradesh – 201301, India</span>
+                <span>{address}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Phone size={18} color="#D9A441" style={{ flexShrink: 0 }} />
-                <a href="tel:+918178782919" style={{ color: '#F3C663', fontWeight: 600 }}>+91 8178782919</a>
+                <a href={`tel:${phone}`} style={{ color: '#F3C663', fontWeight: 600 }}>{phone}</a>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Mail size={18} color="#D9A441" style={{ flexShrink: 0 }} />
-                <a href="mailto:info@alphaofficeinterior.com">info@alphaofficeinterior.com</a>
+                <a href={`mailto:${email}`}>{email}</a>
               </div>
             </div>
           </div>
@@ -178,7 +189,7 @@ export default function Footer({ setActivePage, onOpenQuoteModal }) {
       {/* Bottom Copyright Bar */}
       <div style={{ backgroundColor: '#040E1D', padding: '1.25rem 0', borderTop: '1px solid rgba(255,255,255,0.05)', fontSize: '0.85rem' }}>
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <div>© 2025 Alpha Office Interior. All Rights Reserved.</div>
+          <div>© 2025 {brandName}. All Rights Reserved.</div>
           <div style={{ color: '#64748B' }}>Designed for Modern Inspiring Workspaces</div>
         </div>
       </div>
