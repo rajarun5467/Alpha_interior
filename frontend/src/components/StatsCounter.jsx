@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Award, Users, Calendar, Briefcase, Clock, HeartHandshake } from 'lucide-react';
+import { Award, Users, Calendar, Briefcase, Clock, HeartHandshake, CheckCircle2, Lightbulb, Star, Compass, ShieldCheck, Zap, Target, TrendingUp, Layers, Building, Sparkles } from 'lucide-react';
 import API from '../api/client.js';
 
-const iconMap = { Award, Users, Calendar, Briefcase, Clock, HeartHandshake };
+const iconMap = { Award, Users, Calendar, Briefcase, Clock, HeartHandshake, CheckCircle2, Lightbulb, Star, Compass, ShieldCheck, Zap, Target, TrendingUp, Layers, Building, Sparkles };
 
 const fallbackStats = [
   { icon: 'Briefcase', target: 150, suffix: '+', label: 'Projects Completed', desc: 'Delivered across India', color: '#F59E0B', glow: 'rgba(245,158,11,0.35)' },
@@ -13,15 +13,25 @@ const fallbackStats = [
   { icon: 'Award', target: 100, suffix: '%', label: 'Client Satisfaction', desc: 'Across all engagements', color: '#FBBF24', glow: 'rgba(251,191,36,0.3)' }
 ];
 
+const normalizeStat = (s, i) => ({
+  icon: iconMap[s.icon] || Briefcase,
+  target: Number(s.target) || 0,
+  suffix: s.suffix || '',
+  label: s.label || '',
+  desc: s.desc || s.description || '',
+  color: s.color || (i % 2 === 0 ? '#F59E0B' : '#FBBF24'),
+  glow: s.glow || 'rgba(245,158,11,0.3)'
+});
+
 export default function StatsCounter() {
   const [hasAnimated, setHasAnimated] = useState(false);
   const sectionRef = useRef(null);
-  const [stats, setStats] = useState(fallbackStats.map(s => ({ ...s, icon: iconMap[s.icon] || Briefcase })));
+  const [stats, setStats] = useState(fallbackStats.map(normalizeStat));
 
   useEffect(() => {
     API.get('/stats').then((res) => {
       if (Array.isArray(res.data) && res.data.length > 0) {
-        setStats(res.data.map(s => ({ ...s, icon: iconMap[s.icon] || Briefcase })));
+        setStats(res.data.map(normalizeStat));
       }
     }).catch(() => {});
   }, []);
@@ -263,9 +273,7 @@ function StatCard({ stat, animate, delay }) {
         fontSize: 'clamp(1.4rem, 2.2vw, 2rem)',
         fontWeight: 900,
         lineHeight: 1,
-        background: `linear-gradient(135deg, ${stat.color}, #FBBF24)`,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
+        color: stat.color,
         marginBottom: '0.4rem',
       }}>
         {count}{stat.suffix}
