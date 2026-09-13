@@ -26,7 +26,8 @@ export default function ServiceCard({ title, description, image, icon, highlight
       <div style={{ position: 'relative', height: '210px', overflow: 'hidden' }}>
         <img 
           src={image} 
-          alt={title} 
+          alt={title}
+          onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80'; }}
           style={{
             width: '100%',
             height: '100%',

@@ -42,6 +42,7 @@ export default function ProjectCard({ project, onClick }) {
         <img
           src={project.image}
           alt={project.title}
+          onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80'; }}
           style={{
             width: '100%',
             height: '100%',

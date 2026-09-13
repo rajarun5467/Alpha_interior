@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
-import API from '../api/client.js';
+import API, { resolveImageUrl } from '../api/client.js';
 
 const fallbackTestimonials = [
   { name: 'Vikas Malhotra', role: 'Operations Head', company: 'Pinaakee Digital Solutions', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', quote: 'Alpha Office Interior transformed our 8,000 sq. ft. office space in Sector-62 Noida within the promised 45 days timeline. Their glass partitions, modular workstations, and false ceiling design created a modern high-tech vibe that our employees love!', stars: 5 },
@@ -16,7 +16,7 @@ export default function TestimonialSlider() {
   useEffect(() => {
     API.get('/testimonials').then((res) => {
       if (Array.isArray(res.data) && res.data.length > 0) {
-        setTestimonials(res.data);
+        setTestimonials(res.data.map(t => ({ ...t, avatar: resolveImageUrl(t.avatar) })));
       }
     }).catch(() => {});
   }, []);

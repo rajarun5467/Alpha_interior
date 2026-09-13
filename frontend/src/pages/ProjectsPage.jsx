@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Layers, ShieldCheck, Award, Clock, HeartHandshake, CheckCircle2, ArrowRight } from 'lucide-react';
 import ProjectCard from '../components/ProjectCard';
 import SkylineVector from '../components/SkylineVector';
-import API from '../api/client.js';
+import API, { resolveImageUrl } from '../api/client.js';
 
 const fallbackCategories = ['All', 'Modern Workspaces', 'Glass Partition Solutions', 'Director Cabin', 'Reception Area', 'Conference Room', 'School Furniture', 'Seminar Hall', 'Office Cafeteria'];
 
@@ -25,7 +25,7 @@ export default function ProjectsPage({ onSelectProject, onOpenQuoteModal }) {
   useEffect(() => {
     API.get('/projects').then((res) => {
       if (Array.isArray(res.data) && res.data.length > 0) {
-        setAllProjects(res.data.map((p, i) => ({ ...p, id: p._id || i + 1 })));
+        setAllProjects(res.data.map((p, i) => ({ ...p, id: i + 1, image: resolveImageUrl(p.image) })));
         const cats = ['All', ...new Set(res.data.map(p => p.category).filter(Boolean))];
         if (cats.length > 1) setCategories(cats);
       }

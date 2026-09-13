@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Building, Wrench, Layers, Users, Zap, Award, ShieldCheck, Clock, ArrowRight, CheckCircle2 } from 'lucide-react';
 import ServiceCard from '../components/ServiceCard';
 import SkylineVector from '../components/SkylineVector';
-import API from '../api/client.js';
+import API, { resolveImageUrl } from '../api/client.js';
 
 const iconMap = { Building, Wrench, Layers, Users, Zap, Award, ShieldCheck, Clock, CheckCircle2 };
 
@@ -59,6 +59,7 @@ export default function ServicesPage({ onOpenQuoteModal }) {
       if (Array.isArray(res.data) && res.data.length > 0) {
         setMainServices(res.data.map((s) => ({
           ...s,
+          image: resolveImageUrl(s.image),
           icon: iconMap[s.icon] ? (() => { const Ic = iconMap[s.icon]; return <Ic size={22} />; })() : <Building size={22} />
         })));
       }

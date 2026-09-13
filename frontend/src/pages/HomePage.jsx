@@ -12,7 +12,7 @@ import ProcessSteps from '../components/ProcessSteps';
 import AboutSection from '../components/AboutSection';
 import CountUp from '../components/CountUp';
 import hero1Img from '../assets/hero1.png';
-import API from '../api/client.js';
+import API, { resolveImageUrl } from '../api/client.js';
 
 const iconMap = { Building, Wrench, Layers, Users, Zap, Award, ShieldCheck, Clock, CheckCircle2, Compass, FileText };
 
@@ -45,13 +45,14 @@ export default function HomePage({ setActivePage, onOpenQuoteModal, onSelectProj
       if (Array.isArray(res.data) && res.data.length > 0) {
         setServicesPreview(res.data.map(s => ({
           ...s,
+          image: resolveImageUrl(s.image),
           icon: iconMap[s.icon] ? (() => { const Ic = iconMap[s.icon]; return <Ic size={22} />; })() : <Compass size={22} />
         })));
       }
     }).catch(() => {});
     API.get('/projects').then((res) => {
       if (Array.isArray(res.data) && res.data.length > 0) {
-        setFeaturedProjects(res.data.map((p, i) => ({ ...p, id: p._id || i + 1 })));
+        setFeaturedProjects(res.data.map((p, i) => ({ ...p, id: i + 1, image: resolveImageUrl(p.image) })));
       }
     }).catch(() => {});
   }, []);
