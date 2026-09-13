@@ -8,7 +8,8 @@ export async function protect(req, res, next) {
   }
   if (!token) return res.status(401).json({ message: 'Not authorized, no token' });
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const secret = process.env.JWT_SECRET || 'alpha-office-dev-secret-fallback-2025';
+    const decoded = jwt.verify(token, secret);
     req.admin = await Admin.findById(decoded.id).select('-password');
     if (!req.admin) return res.status(401).json({ message: 'Not authorized' });
     next();
