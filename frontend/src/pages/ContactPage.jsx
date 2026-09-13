@@ -147,14 +147,16 @@ export default function ContactPage() {
                 </p>
                 <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                   {[
-                    { icon: <FacebookIcon size={18} />, label: 'Facebook' },
-                    { icon: <InstagramIcon size={18} />, label: 'Instagram' },
-                    { icon: <LinkedinIcon size={18} />, label: 'LinkedIn' },
-                    { icon: <PinterestIcon size={18} />, label: 'Pinterest' }
+                    { icon: <FacebookIcon size={18} />, label: 'Facebook', href: 'https://facebook.com/alphaofficeinterior' },
+                    { icon: <InstagramIcon size={18} />, label: 'Instagram', href: 'https://instagram.com/alphaofficeinterior' },
+                    { icon: <LinkedinIcon size={18} />, label: 'LinkedIn', href: 'https://linkedin.com/company/alphaofficeinterior' },
+                    { icon: <PinterestIcon size={18} />, label: 'Pinterest', href: 'https://pinterest.com/alphaofficeinterior' }
                   ].map((s, idx) => (
                     <a
                       key={idx}
-                      href="#"
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       aria-label={s.label}
                       style={{
                         padding: '0.65rem 1.25rem',
