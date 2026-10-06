@@ -11,6 +11,7 @@ import leadsRoutes from './routes/leads.js';
 import uploadRoutes from './routes/upload.js';
 import { Admin } from './models/index.js';
 import { runSeed } from './seed/seed.js';
+import { protect } from './middleware/auth.js';
 
 dotenv.config();
 connectDB();
@@ -39,8 +40,12 @@ app.use('/api/admin/upload', uploadRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
-// Manual re-seed endpoint (can be triggered via browser)
-app.get('/api/seed', async (req, res) => {
+// Manual re-seed endpoint — protected by admin JWT + SEED_KEY env var
+app.post('/api/seed', protect, async (req, res) => {
+  const seedKey = process.env.SEED_KEY;
+  if (!seedKey || req.headers['x-seed-key'] !== seedKey) {
+    return res.status(403).json({ status: 'error', message: 'Forbidden: valid seed key required' });
+  }
   try {
     await runSeed();
     res.json({ status: 'ok', message: 'Database seeded successfully' });

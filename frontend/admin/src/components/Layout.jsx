@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import {
   LayoutDashboard, Users, Settings as SettingsIcon, Briefcase, FolderKanban,
   Star, Layers,
-  Calculator, LogOut, Menu, X
+  Calculator, LogOut, Menu, X, KeyRound
 } from 'lucide-react';
 
 const navItems = [
@@ -15,6 +15,7 @@ const navItems = [
   { path: '/testimonials', label: 'Testimonials', icon: Star },
   { path: '/transformation-tabs', label: 'Transformation', icon: Layers },
   { path: '/cost-calculator', label: 'Cost Calculator', icon: Calculator },
+  { path: '/change-password', label: 'Change Password', icon: KeyRound },
   { path: '/settings', label: 'Site Settings', icon: SettingsIcon }
 ];
 

@@ -86,7 +86,7 @@ crudRoutes(TransformationTab, 'transformation-tabs');
 
 // === Leads ===
 router.get('/leads/quotes', async (req, res) => {
-  try { res.json(await QuoteSubmission.find().sort({ submittedAt: -1 }).limit(100)); }
+  try { res.json(await QuoteSubmission.find().sort({ submittedAt: -1 })); }
   catch (e) { res.status(500).json({ message: e.message }); }
 });
 router.get('/leads/quotes/:id', async (req, res) => {
@@ -102,7 +102,7 @@ router.delete('/leads/quotes/:id', async (req, res) => {
   catch (e) { res.status(400).json({ message: e.message }); }
 });
 router.get('/leads/contacts', async (req, res) => {
-  try { res.json(await ContactSubmission.find().sort({ submittedAt: -1 }).limit(100)); }
+  try { res.json(await ContactSubmission.find().sort({ submittedAt: -1 })); }
   catch (e) { res.status(500).json({ message: e.message }); }
 });
 router.get('/leads/contacts/:id', async (req, res) => {

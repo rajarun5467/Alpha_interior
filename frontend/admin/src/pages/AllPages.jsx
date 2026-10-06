@@ -1,7 +1,15 @@
-﻿import { CrudPage, SinglePage, Field, ImageInput, useApi, Toast } from '../components/CrudComponents.jsx';
+﻿import { CrudPage, SinglePage, Field, ImageInput, useApi, Toast, useToast } from '../components/CrudComponents.jsx';
 import { useEffect, useState } from 'react';
 import API from '../api/client.js';
-import { Plus, Trash2, Save, Calculator } from 'lucide-react';
+import { Plus, Trash2, Save, Calculator, KeyRound } from 'lucide-react';
+
+// Lucide icon names available on the public site iconMap
+const ICON_OPTIONS = [
+  'Building', 'Layers', 'Award', 'Users', 'CheckCircle2', 'Clock', 'HeartHandshake',
+  'Compass', 'Sparkles', 'ShieldCheck', 'Zap', 'Star', 'Target', 'TrendingUp',
+  'Settings', 'LayoutDashboard', 'GitMerge', 'Globe', 'Phone', 'Wrench',
+  'Lightbulb', 'Briefcase', 'Calendar', 'Monitor', 'BookOpen', 'Mic', 'Coffee'
+];
 
 export function Settings() {
   return <SinglePage title="Site Settings" endpoint="settings" fields={[
@@ -37,10 +45,10 @@ export function HeroManager() {
 
 export function ServicesManager() {
   return <CrudPage title="Services Manager" endpoint="services" fields={[
-    { key: 'title', label: 'Title' },
+    { key: 'title', label: 'Title', required: true },
     { key: 'description', label: 'Description', type: 'textarea' },
     { key: 'image', label: 'Image', type: 'image' },
-    { key: 'icon', label: 'Icon (lucide name)' },
+    { key: 'icon', label: 'Icon', type: 'select', options: ICON_OPTIONS },
     { key: 'highlights', label: 'Highlights', type: 'list' },
     { key: 'isActive', label: 'Active', type: 'select', options: ['true', 'false'] }
   ]} newItemTemplate={{ title: '', description: '', image: '', icon: 'Building', highlights: [], isActive: true }} />;
@@ -48,7 +56,7 @@ export function ServicesManager() {
 
 export function ProjectsManager() {
   return <CrudPage title="Projects Manager" endpoint="projects" fields={[
-    { key: 'title', label: 'Title' },
+    { key: 'title', label: 'Title', required: true },
     { key: 'category', label: 'Category' },
     { key: 'image', label: 'Image', type: 'image' },
     { key: 'description', label: 'Description', type: 'textarea' },
@@ -60,11 +68,11 @@ export function ProjectsManager() {
 
 export function TestimonialsManager() {
   return <CrudPage title="Testimonials Manager" endpoint="testimonials" fields={[
-    { key: 'name', label: 'Name' },
+    { key: 'name', label: 'Name', required: true },
     { key: 'role', label: 'Role' },
     { key: 'company', label: 'Company' },
     { key: 'avatar', label: 'Avatar', type: 'image' },
-    { key: 'quote', label: 'Quote', type: 'textarea' },
+    { key: 'quote', label: 'Quote', type: 'textarea', required: true },
     { key: 'stars', label: 'Stars', type: 'number' },
     { key: 'isActive', label: 'Active', type: 'select', options: ['true', 'false'] }
   ]} newItemTemplate={{ name: '', role: '', company: '', avatar: '', quote: '', stars: 5, isActive: true }} />;
@@ -72,9 +80,9 @@ export function TestimonialsManager() {
 
 export function TransformationTabsManager() {
   return <CrudPage title="Transformation Tabs Manager" endpoint="transformation-tabs" fields={[
-    { key: 'id', label: 'ID' },
-    { key: 'label', label: 'Label' },
-    { key: 'title', label: 'Title' },
+    { key: 'id', label: 'ID', required: true },
+    { key: 'label', label: 'Label', required: true },
+    { key: 'title', label: 'Title', required: true },
     { key: 'image', label: 'Image', type: 'image' },
     { key: 'description', label: 'Description', type: 'textarea' },
     { key: 'bullets', label: 'Bullets', type: 'list' }
@@ -84,11 +92,9 @@ export function TransformationTabsManager() {
 export function CostCalculatorConfigManager() {
   const { data, loading, reload } = useApi('cost-calculator-config', true);
   const [form, setForm] = useState(null);
-  const [toast, setToast] = useState('');
+  const { toast, showToast } = useToast();
 
   useEffect(() => { if (data) setForm(data); }, [data]);
-
-  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
 
   const save = async () => {
     try {
@@ -216,7 +222,63 @@ export function CostCalculatorConfigManager() {
       <button onClick={save} className="flex items-center gap-2 bg-navy text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-navy-light">
         <Save size={18} /> Save Changes
       </button>
-      <Toast message={toast} />
+      <Toast toast={toast} />
+    </div>
+  );
+}
+
+export function ChangePassword() {
+  const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [saving, setSaving] = useState(false);
+  const { toast, showToast } = useToast();
+
+  const submit = async () => {
+    if (!form.currentPassword || !form.newPassword) { showToast('All fields required', 'error'); return; }
+    if (form.newPassword.length < 6) { showToast('New password must be at least 6 characters', 'error'); return; }
+    if (form.newPassword !== form.confirmPassword) { showToast('Passwords do not match', 'error'); return; }
+    setSaving(true);
+    try {
+      await API.post('/auth/change-password', { currentPassword: form.currentPassword, newPassword: form.newPassword });
+      showToast('Password changed successfully');
+      setForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Failed to change password', 'error');
+    }
+    setSaving(false);
+  };
+
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="bg-navy text-gold p-2.5 rounded-lg"><KeyRound size={22} /></div>
+        <div>
+          <h1 className="text-2xl font-bold text-navy">Change Password</h1>
+          <p className="text-sm text-slate-500">Update your admin panel login password.</p>
+        </div>
+      </div>
+      <div className="bg-white rounded-xl shadow-sm p-6 max-w-md">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Current Password</label>
+            <input type="password" value={form.currentPassword} onChange={(e) => setForm({ ...form, currentPassword: e.target.value })}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-gold" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">New Password</label>
+            <input type="password" value={form.newPassword} onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-gold" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Confirm New Password</label>
+            <input type="password" value={form.confirmPassword} onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-gold" />
+          </div>
+        </div>
+        <button onClick={submit} disabled={saving} className="mt-5 bg-navy text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-navy-light disabled:opacity-50 flex items-center gap-2">
+          <KeyRound size={16} /> {saving ? 'Updating...' : 'Update Password'}
+        </button>
+      </div>
+      <Toast toast={toast} />
     </div>
   );
 }

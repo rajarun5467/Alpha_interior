@@ -7,7 +7,7 @@ import Leads from './pages/Leads.jsx';
 import {
   Settings, ServicesManager, ProjectsManager, TestimonialsManager,
   TransformationTabsManager,
-  CostCalculatorConfigManager
+  CostCalculatorConfigManager, ChangePassword
 } from './pages/AllPages.jsx';
 
 function ProtectedRoute({ children }) {
@@ -33,6 +33,7 @@ function AppRoutes() {
               <Route path="/testimonials" element={<TestimonialsManager />} />
               <Route path="/transformation-tabs" element={<TransformationTabsManager />} />
               <Route path="/cost-calculator" element={<CostCalculatorConfigManager />} />
+              <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/settings" element={<Settings />} />
             </Routes>
           </Layout>
