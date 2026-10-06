@@ -9,6 +9,7 @@ import publicRoutes from './routes/public.js';
 import adminRoutes from './routes/admin.js';
 import leadsRoutes from './routes/leads.js';
 import uploadRoutes from './routes/upload.js';
+import mediaRoutes from './routes/media.js';
 import { Admin } from './models/index.js';
 import { runSeed } from './seed/seed.js';
 import { protect } from './middleware/auth.js';
@@ -37,6 +38,7 @@ app.use('/api', publicRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/leads', leadsRoutes);
 app.use('/api/admin/upload', uploadRoutes);
+app.use('/api/admin/media', mediaRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 

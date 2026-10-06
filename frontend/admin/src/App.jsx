@@ -4,6 +4,7 @@ import { Layout } from './components/Layout.jsx';
 import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Leads from './pages/Leads.jsx';
+import MediaLibrary from './pages/MediaLibrary.jsx';
 import {
   Settings, ServicesManager, ProjectsManager, TestimonialsManager,
   TransformationTabsManager,
@@ -32,6 +33,7 @@ function AppRoutes() {
               <Route path="/projects" element={<ProjectsManager />} />
               <Route path="/testimonials" element={<TestimonialsManager />} />
               <Route path="/transformation-tabs" element={<TransformationTabsManager />} />
+              <Route path="/media" element={<MediaLibrary />} />
               <Route path="/cost-calculator" element={<CostCalculatorConfigManager />} />
               <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/settings" element={<Settings />} />
